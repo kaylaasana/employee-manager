@@ -8,7 +8,7 @@ const viewAllEmployees=()=>{
     //display results
     //return to main menu
 }
-    const addNewEmployee={
+    const addNewEmployee = () ={
 }
 
 const addNewRole=()=>{
