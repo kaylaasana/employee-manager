@@ -24,7 +24,7 @@ CREATE TABLE roles (
     department_id INT NOT NULL,
     -- accessing the id key in departments to be referenced in roles table
     FOREIGN KEY (department_id) 
-    REFERENCES departments(department_id)
+    REFERENCES departments(id)
 );
 
 -- create table for employees
@@ -38,6 +38,6 @@ CREATE TABLE employees (
     FOREIGN KEY (role_id)
     REFERENCES roles(id),
     manager_id  INT,
-    FOREIGN KEY (id)
-    REFERENCES roles(manager_id)
+    FOREIGN KEY (manager_id)
+    REFERENCES employees(id)
 );
