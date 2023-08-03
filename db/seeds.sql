@@ -1,3 +1,4 @@
+-- adding keys to departments table
 INSERT INTO departments (name)
 VALUES ("Research"),
        ("Cheese"),
@@ -5,6 +6,7 @@ VALUES ("Research"),
        ("Cows"),
        ("Sleep")
 
+-- adding keys to roles table
 INSERT INTO roles (title, salary, department_id)
 VALUES ("Head of Cheese", 100000, 2),
        ("Top Cow", 150000, 4),
@@ -14,6 +16,7 @@ VALUES ("Head of Cheese", 100000, 2),
        ("Intern", 10000000000, 1)
        ("Cheese Taster", 10000000000000, 2)
 
+-- adding keys to employees table
 INSERT INTO employees (first_name, last_name, role_id, manager_id)
 VALUES ("Joe", "Sef", 1, null),
        ("Tina", "Belcher", 2, null),
