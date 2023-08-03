@@ -28,8 +28,8 @@ CREATE TABLE roles (
 );
 
 -- create table for employees
-DROP TABLE IF EXISTS employee;
-CREATE TABLE employee (
+DROP TABLE IF EXISTS employees;
+CREATE TABLE employees (
     id INT AUTO_INCREMENT NOT NULL,
     first_name VARCHAR(30) NOT NULL,
     last_name VARCHAR(30) NOT NULL,
