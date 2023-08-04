@@ -1,13 +1,6 @@
 //import statements
-const express = require('express')
+const inquirer = require('inquirer');
 const mysql = require('mysql2');
-const PORT = process.env.PORT || 3001;
-const app = express();
-
-// middleware
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
-
 
 const db = mysql.createConnection(
     {
@@ -16,52 +9,91 @@ const db = mysql.createConnection(
       user: 'root',
       // MySQL password
       password: 'password',
-      database: 'employees_db'
+      database: 'employee_db'
     },
     console.log(`Connected to the employees_db database`)
 );
 
-app.get('/api/departments', (req, res) => {
-    
+const questions = [
+    {
+      // // prompt user for text (no more than three char), shape, color of text, color of shape
+      type: "list",
+      message: "What would you like to view?",
+      name: "action",
+      choices: [
+        "View all departments",
+        "View all roles",
+        "View all employees",
+        "Add a department",
+        "Add a role",
+        "Add an employee",
+        "Update an employee role"
+      ]
+    }
+  ];
+
+function init(){
+    inquirer.prompt(questions)
+    .then(response => {
+        switch(response.action){
+            case "View all departments":
+                viewDepartments()
+                break;
+            case "View all roles":
+                viewRoles()
+                break;
+            case "View all employees":
+                viewEmployees() 
+                break;
+            case "Add a department":
+                addDept()
+                break;
+            case "Add a role":
+                addRole()
+                break;
+            case "Add an employee":
+                addEmployee()
+                break;
+            case "Update an employee role":
+                updateEmpRole()
+                break;
+        }
+    })
+}
+
+function viewDepartments() {
+
     db.query('SELECT * FROM departments', function(err, results) {
         if(err){
             console.log(err)
         }
-        console.log(results)
-        res.json(results)
-    })    
-});
+        console.table(results)
+        init()
+    })
+}
 
-app.get('/api/roles', (req, res) => {
-    
-    db.query('SELECT * FROM roles', function(err, results) {
+function viewRoles() {
+
+    db.query('SELECT roles.title, roles.id, departments.name FROM (departments INNER JOIN roles ON roles.department_id = departments.id)', function(err, results) {
         if(err){
             console.log(err)
         }
-        console.log(results)
-        res.json(results)
-    })    
-});
+        console.table(results)
+        init()
+    })
+}
 
-app.get('/api/employees', (req, res) => {
-    
-    db.query('SELECT * FROM employees', function(err, results) {
+function viewEmployees() {
+
+    db.query('SELECT * FROM ((departments INNER JOIN roles ON roles.department_id = departments.id) INNER JOIN employees ON employees.role_id = roles.id)', function(err, results) {
         if(err){
             console.log(err)
         }
-        console.log(results)
-        res.json(results)
-    })    
-});
+        console.table(results)
+        init()
+    })
+}
 
-//create inquirer questions
-//switch statement
-
-// const viewAllEmployees=()=>{
-//     //query database
-//     //display results
-//     //return to main menu
-// }
 //     const addNewEmployee = () ={
 // }
 
@@ -74,3 +106,4 @@ app.get('/api/employees', (req, res) => {
 //     //return confirmation message
 //     //return to main menu
 // }
+init()
