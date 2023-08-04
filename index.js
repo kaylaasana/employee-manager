@@ -16,7 +16,6 @@ const db = mysql.createConnection(
 
 const questions = [
     {
-      // // prompt user for text (no more than three char), shape, color of text, color of shape
       type: "list",
       message: "What would you like to view?",
       name: "action",
@@ -93,6 +92,72 @@ function viewEmployees() {
         init()
     })
 }
+
+
+
+function addDept() {
+    const deptQuestions = [
+        {
+            type: 'input',
+            message: 'What is the name of the new Department?',
+            name: 'newDeptName'
+        }
+    ]
+
+    inquirer.prompt(deptQuestions)
+    .then(response => {
+        db.query('INSERT INTO departments (name) VALUES (?)', response.newDeptName, function(err, results) {
+        if(err){
+            console.log(err)
+        }
+        console.log('New department added')
+        init()
+    })
+    })
+
+    
+}
+
+
+function addRole() {
+    db.query('SELECT * FROM departments', function (err, results) {
+        if (err) {
+            console.log(err);
+            return;
+        }
+        const depts = results.map((depts) => ({ name: depts.name, value: depts.id }));
+
+        const roleQuestions = [
+            {
+                type: 'input',
+                message: 'What role would you like to add?',
+                name: 'newRoleName'
+            },
+            {
+                type: 'input',
+                message: 'What is the salary for this new position?',
+                name: 'newSalary'
+            },
+            {
+                type: 'list',
+                message: 'What department is this new role a part of',
+                name: 'departmentId',
+                choices: depts.map((depts) => depts.name)
+            }
+        ];
+
+        inquirer.prompt(roleQuestions)
+        .then((response) => {
+            const departmentId = depts.find((depts) => depts.name === response.departmentId).value;
+            db.query('INSERT INTO roles (title, salary, department_id) VALUES (?, ?, ?)', [response.newRoleName, response.newSalary, departmentId], function(err) {
+                if(err){
+                    console.log(err)
+                }
+                console.log('New department added')
+                init()
+        })
+    });
+})}
 
 //     const addNewEmployee = () ={
 // }
