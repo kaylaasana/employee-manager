@@ -27,7 +27,7 @@ const questions = [
       "Add a department",
       "Add a role",
       "Add an employee",
-      "Update an employee role",
+      "Update an employee role"
     ],
   },
 ];
@@ -167,7 +167,7 @@ function addRole() {
           if (err) {
             console.log(err);
           }
-          console.log("New department added");
+          console.log("New role added");
           init();
         }
       );
