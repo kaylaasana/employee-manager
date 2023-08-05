@@ -14,6 +14,7 @@ const db = mysql.createConnection(
   console.log(`Connected to the employees_db database`)
 );
 
+// questions to prompt the user for actions they can take
 const questions = [
   {
     type: "list",
@@ -31,6 +32,7 @@ const questions = [
   },
 ];
 
+// initiate the inquirer prompt questions
 function init() {
   inquirer.prompt(questions).then((response) => {
     switch (response.action) {
@@ -59,6 +61,7 @@ function init() {
   });
 }
 
+// display the departments as a table
 function viewDepartments() {
   db.query("SELECT * FROM departments", function (err, results) {
     if (err) {
@@ -69,6 +72,7 @@ function viewDepartments() {
   });
 }
 
+// display roles as a table
 function viewRoles() {
   db.query(
     "SELECT roles.title, roles.id, departments.name FROM (departments INNER JOIN roles ON roles.department_id = departments.id)",
@@ -82,6 +86,7 @@ function viewRoles() {
   );
 }
 
+// display employees as a table
 function viewEmployees() {
   db.query(
     "SELECT * FROM ((departments INNER JOIN roles ON roles.department_id = departments.id) INNER JOIN employees ON employees.role_id = roles.id)",
@@ -95,6 +100,7 @@ function viewEmployees() {
   );
 }
 
+// add new department
 function addDept() {
   const deptQuestions = [
     {
@@ -119,6 +125,7 @@ function addDept() {
   });
 }
 
+// add new role
 function addRole() {
   db.query("SELECT * FROM departments", function (err, results) {
     if (err) {
@@ -167,7 +174,8 @@ function addRole() {
     });
   });
 }
-// add employee
+
+// add new employee
 function addEmployee() {
   db.query("SELECT * FROM departments", function (err, results) {
     if (err) {
@@ -251,6 +259,7 @@ function addEmployee() {
     });
   });
 }
+
 // update employee role
 function updateEmpRole() {
   
