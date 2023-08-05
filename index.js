@@ -140,7 +140,7 @@ function addRole() {
             },
             {
                 type: 'list',
-                message: 'What department is this new role a part of',
+                message: 'What department is this new role a part of?',
                 name: 'departmentId',
                 choices: depts.map((depts) => depts.name)
             }
@@ -158,17 +158,74 @@ function addRole() {
         })
     });
 })}
+// add employee
+function addEmployee() {
 
-//     const addNewEmployee = () ={
-// }
+    db.query('SELECT * FROM departments', function (err, results) {
+        if (err) {
+            console.log(err);
+            return;
+        }
+        const depts = results.map((dept) => dept.name);
 
-// const addNewRole=()=>{
-//     //add the name of the role
-//     //ask the salary
-//     //query departments
-//         //ask department with list of choices
-//         //write new data to db
-//     //return confirmation message
-//     //return to main menu
-// }
+    db.query('SELECT * FROM roles', function (err, results) {
+        if (err) {
+            console.log(err);
+            return;
+        }
+        const roles = results.map((roles) => ({ name: roles.title, value: roles.id }));
+
+    db.query('SELECT * FROM employees', function (err, results) {
+        if (err) {
+            console.log(err);
+            return;
+        }
+        const employees = results.map((emp) => ({ name: emp.first_name + ' ' + emp.last_name, value: emp.id }));
+
+        const employeeQuestions = [
+            {
+                type: 'input',
+                message: 'What is the first name of the new employee?',
+                name: 'empFirstName'
+            },
+            {
+                type: 'input',
+                message: 'What is the last name of the new employee?',
+                name: 'empLastName'
+            },
+            {
+                type: 'list',
+                message: 'What department is the new employee part of?',
+                name: 'departmentId',
+                choices: depts
+            },
+            {
+                type: 'list',
+                message: 'What role is this new employee taking?',
+                name: 'roleID',
+                choices: roles
+            },
+            {
+                type: 'list',
+                message: 'Who is the manager of the new employee?',
+                name: 'managerID',
+                choices: employees
+            }
+        ];
+
+        inquirer.prompt(employeeQuestions)
+        .then((response) => {
+
+            const managerIdValue = response.managerID;
+
+            db.query('INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)', [response.empFirstName, response.empLastName, response.roleID, managerIdValue], function(err) {
+                if(err){
+                    console.log(err)
+                }
+                console.log('New employee added')
+                init()
+        })
+    })})})});
+}
+// update employee role
 init()
